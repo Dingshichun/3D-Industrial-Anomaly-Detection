@@ -1,6 +1,7 @@
-# 3D Industrial Defect Detection
+# 3D Industrial & Agricultural Defect Detection
 
-A complex industrial anomaly and defect detection framework based on multi-modal feature fusion (2D RGB + 3D point cloud spatial information), explicitly designed for the [MVTec 3D-AD Dataset](https://www.mvtec.com/company/research/datasets/mvtec-3d-ad).
+A complex industrial and agricultural anomaly and defect detection framework based on multi-modal feature fusion (2D RGB + 3D point cloud spatial information).
+This project is designed for targets with complex surface topologies and irregular textures, accurately detecting scratches on rigid parts as well as bruises and degradation on agricultural products.
 [中文文档 (Chinese Verification Document)](README.md)
 
 ## 🌟 Core Features
@@ -25,12 +26,23 @@ Under typical evaluation metrics, the system resolves across multiple objects:
 | `foam` | PatchCore + 3D Feature (`blur_radius=2, top_k=5`) | **0.7575** | **0.9332** |
 | `tire` | PatchCore + 3D Feature (`subsample=0.2, top_k=50`)| **0.7237** | **0.9878** |
 | `rope` | PatchCore + 3D Feature (`blur_radius=8, top_k=400`) | **0.7867** | **0.9901** |
+| `carrot` (Agriculture) | Spatial PatchCore (`xyz_weight=0.0, blur_radius=4, subsample=0.1`) | **0.9122** | **0.9938** |
+| `potato` (Agriculture) | Spatial PatchCore (`xyz_weight=0.0, blur_radius=4, subsample=0.1`) | **0.8557** | **0.9961** |
+| `peach` (Agriculture) | Spatial PatchCore (`xyz_weight=0.0, blur_radius=4, subsample=0.1`) | **0.8414** | **0.9936** |
 
 ## 📸 Visualization Example
 The system enables automatic diagnostic visualizations by masking irrelevant background point clouds (`depth=0`) and rendering continuous defect heatmaps layered smoothly onto RGB input limits.
 
-**Dowel Contamination Visualization Example:**
+**Below are detection examples of surface contamination for `dowel`, `rope`, `tire`, `carrot`, `peach`, and `potato`:**
+
+Industrial Products
 ![Dowel Contamination](visualizations/dowel/dowel_contamination_4.png)
+![Rope Contamination](visualizations/rope/rope_contamination_3.png)
+![Tire Contamination](visualizations/tire/tire_contamination_2.png)  
+Agricultural Products
+![Carrot Contamination](visualizations/carrot/carrot_contamination_4.png)
+![Peach Contamination](visualizations/peach/peach_contamination_3.png)
+![Potato Contamination](visualizations/potato/potato_contamination_2.png)
 *(Inputs mapping -> left to right: RGB | Z-Depth | Predicted Distances Heatmap | Ground Truth Mask)*
 
 ## 🛠️ Installation

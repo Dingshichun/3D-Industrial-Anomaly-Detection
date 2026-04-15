@@ -1,9 +1,10 @@
-# 3D Industrial Defect Detection
+# 3D Industrial & Agricultural Defect Detection
 
-基于多模态特征融合（2D RGB + 3D 点云空间信息）的复杂工业品缺陷与异常检测框架，专为 MVTec 3D-AD 数据集设计。
+基于多模态特征融合（2D RGB + 3D 点云空间信息）的复杂工业品与农产品表面缺陷检测框架。
+该项目专为具有复杂表面拓扑与不规则纹理的目标设计，能够高精度检出刚体部件划痕以及农产品表面的碰冻伤与变质异常。
 
 ## 🌟 项目核心亮点 (Features)
-本项目针对各类具有不同拓扑结构和表面纹理的工业产品，采用并在架构中集成了两套强大的异常检测算法，同时引入了“分类路由（Strategy Router）”模式，以实现单一代码库对不同材质物体的全覆盖检测：
+本项目针对各类具有不同拓扑结构和表面纹理的产品，采用并在架构中集成了两套强大的异常检测算法，同时引入了“分类路由（Strategy Router）”模式，以实现单一代码库对不同材质物体的全覆盖检测：
 
 1. **AST (Asymmetric Student-Teacher) 反向蒸馏模型基线**
    * **原理**：融合构建 Teacher 特征流形空间，利用 Student Decoder 试图重构无异常物体的特征；测试时通过两者之间拉开的特征差异/距离进行缺陷打分。
@@ -24,13 +25,24 @@
 | `foam` | PatchCore + 3D Feature (`blur_radius=2, top_k=5`) | **0.7575** | **0.9332** |
 | `tire` | PatchCore + 3D Feature (`subsample=0.2, top_k=50`)| **0.7237** | **0.9878** |
 | `rope` | PatchCore + 3D Feature (`blur_radius=8, top_k=400`) | **0.7867** | **0.9901** |
+| `carrot` (农产品) | Spatial PatchCore (`xyz_weight=0.0, blur_radius=4, subsample=0.1`) | **0.9122** | **0.9938** |
+| `potato` (农产品) | Spatial PatchCore (`xyz_weight=0.0, blur_radius=4, subsample=0.1`) | **0.8557** | **0.9961** |
+| `peach` (农产品) | Spatial PatchCore (`xyz_weight=0.0, blur_radius=4, subsample=0.1`) | **0.8414** | **0.9936** |
 
 ## 📸 可视化结果展示 (Visualization)
 系统自带特征热图自动生成功能。在模型推理完毕后，热力值可以直接反映出表面异常在三维与二维空间上的精确定位。
 
-**下方展示了 `dowel` 表面污染（Contamination）情况下的检测结果示例：**
+**下方展示了 `dowel`, `rope`, `tire`, `carrot`, `peach`, `potato` 的表面污染（Contamination）情况下的检测结果示例：**
 
+工业产品
 ![Dowel Contamination 示例](visualizations/dowel/dowel_contamination_4.png)
+![rope Contamination 示例](visualizations/rope/rope_contamination_3.png)
+![tire Contamination 示例](visualizations/tire/tire_contamination_2.png) 
+ 
+农业产品
+![carrot Contamination 示例](visualizations/carrot/carrot_contamination_4.png)
+![peach Contamination 示例](visualizations/peach/peach_contamination_3.png)
+![potato Contamination 示例](visualizations/potato/potato_contamination_2.png)
 *(注：图示自左向右依次为 RGB原图、Z轴原始点云深度图、检测出的异常热力图、真实的缺陷标注 Ground Truth)*
 
 ## 🛠️ 安装与环境 (Installation)
