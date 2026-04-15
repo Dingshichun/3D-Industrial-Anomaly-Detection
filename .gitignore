@@ -1,0 +1,15 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# VS Code settings
+.vscode/
+
+# Ignore dataset contents but keep the directory tracked
+data/MVTec3D-AD/*
+!data/MVTec3D-AD/.gitkeep
+
+# ignore checkpoints but keep the directory tracked
+checkpoints/*
+!checkpoints/.gitkeep
