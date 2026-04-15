@@ -560,6 +560,12 @@ def get_evaluator(category, config=None, device=None):
         print(f"[Router] Using Spatial PatchCore for: {category} (Tuned for high-freq texture)")
         return SpatialPatchCoreEvaluator(config, device, xyz_weight=0.0, subsample_ratio=0.2, blur_radius=8, top_k=400)
         
+    elif category in ['carrot', 'potato', 'peach']:
+        print(f"[Router] Using Spatial PatchCore (Agricultural Produce) for: {category}")
+        # 农产品个体之间形状差异极大，必须把空间绝对坐标权重(xyz_weight)降为 0，否则正常的形状差异会被误判为缺陷。
+        # 仅依赖 3D 法向量和 RGB 纹理进行局部比对。
+        return SpatialPatchCoreEvaluator(config, device, xyz_weight=0.0, subsample_ratio=0.1, blur_radius=4, top_k=50)
+        
     else:
         print(f"[Router] Using Default ASTEvaluator for: {category}")
         return SpatialPatchCoreEvaluator(config, device, xyz_weight=0.0, subsample_ratio=0.2, blur_radius=2, top_k=50)
