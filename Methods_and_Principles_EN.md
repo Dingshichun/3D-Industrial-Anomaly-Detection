@@ -1,15 +1,16 @@
-# Core Methods and Technical Principles: 3D Defect Detection
+# Core Methods and Technical Principles: 3D Industrial & Agricultural Defect Detection
 
-This project aims to solve the fully unsupervised defect detection problem in industrial production, where "only good items are available for training". Targeting the multi-modal data (2D RGB images + 3D XYZ depth coordinates) provided by the MVTec 3D-AD dataset, we employed the following core methods and deeply analyzed the scientific principles and rationale behind their selection.
+This project aims to solve the fully unsupervised defect detection problem in industrial production and modern agriculture, where "only good items are available for training". Targeting the multi-modal data (2D RGB images + 3D XYZ depth coordinates) provided by the MVTec 3D-AD dataset, we employed the following core methods and deeply analyzed the scientific principles and rationale behind their selection.
 
 ---
 
 ## 1. Overall Challenges and Solutions
 
 ### Challenges
-Industrial defect detection usually faces two extremes:
+Industrial and agricultural defect detection usually faces complex extremes:
 - **Unsupervised Learning Constraint**: On a real production line, it is extremely costly or impossible to collect all kinds of rare defects (scratches, holes, deformations). Our model must learn to identify "abnormal" purely by seeing "normal" samples.
 - **Extreme Divergence in Material Morphology**: The test items include rigid bodies with fixed shapes and relatively smooth surfaces (e.g., `dowel`), materials whose surfaces consist of unordered porous structures (e.g., `foam`), and objects with high-frequency periodic textures and easily deformable shapes (e.g., `tire`, `rope`).
+- **High Variability of Natural Forms (Agricultural Pain Point)**: Industrial standard parts usually have consistent structures, while agricultural products (such as `carrot`, `potato`, `peach`) differ wildly in natural shapes, curves, size topologies, and colors between each individual. Conventional 3D mapping algorithms matching specific standard templates would easily misclassify typical natural indentations as "critical flaws".
 
 ### The Solution: Strategy Router
 There is no single set of hyperparameters or even a single model that can perfectly detect all materials. Therefore, we built a **Strategy Router intelligent routing system**. Based on the physical feature distribution of different objects, it dynamically switches between two highly differentiated and complementary algorithm architectures: the **AST Reverse Distillation Baseline** and the **Spatial PatchCore**, assisted by customized 3D feature processing (e.g., 3D Surface Normals).
@@ -49,9 +50,10 @@ However, PatchCore directly compares local feature point libraries: as long as t
 Using the 2D depth map layout, we extract the XYZ tensor space coordinates for the image. Utilizing two sets of 3D convolution kernels (based on the Sobel filter concept), we calculate the horizontal gradient $U$ and vertical gradient $V$ in the 2D plane based on the $Z$ depth value matrix. Applying a continuous **Cross Product** on these two gradients, followed by $L_2$ normalization calculation, allows us to obtain the 3D Surface Normals of the entire item mapped natively at high speeds efficiently within the GPU.
 
 ### Why use Surface Normals?
-Usually, 3D point cloud matching relies heavily on absolute topology coordinates (e.g., Z=50 mm). But this has a fatal flaw: if a tire on the conveyor belt tilts, or a rope is bent into a different arc due to its flexibility, the absolute depth coordinates will dramatically change, and the model will mistakenly think this represents a massive discrepancy defect!
-However, surface normals measure **relative curvature limit and slope**. Even if a rope is placed in a different location, the normal curvature of the local cylindrical surface topology remains the same. The normals will only experience a high-frequency cliff-like anomaly drop when the surface encounters **cuts or protrusions/bumps**.
-It is precisely by introducing this feature that is totally unaffected by positional translation bounds, while actively **turning off absolute coordinate weights (`xyz_weight = 0.0`)**, that we elevated the capacity of extremely hard-to-train high-frequency flexible items like `tire` and `rope` effectively to an industrial production tier capability index grade.
+Usually, 3D point cloud matching relies heavily on absolute topology coordinates (e.g., Z=50 mm). But this has a fatal flaw: if a tire on the conveyor belt tilts, or a rope is bent into a different arc due to its flexibility, or it observes a purely natural potato with variable shapes, the absolute depth coordinates will dramatically change, and the model will mistakenly think this represents a massive discrepancy defect!
+However, surface normals measure **relative curvature limit and slope**. Even if a target is randomly oriented, the normal local curvature characteristics of its surface remain dynamically stable. The normals will only experience a high-frequency cliff-like anomaly drop when the surface encounters **genuine cuts, bruises, or protrusions**.
+
+For naturally soft industrial targets and **various natural agricultural products** (e.g., `carrot`, `potato`, `peach`), we distinctly crafted dedicated routing channels to **completely disable absolute positional dependencies (`xyz_weight = 0.0`)**. This unbinds the model from fixed template geometry memories. Instead, relying strictly on 3D surface normal gradient jumps and uncalibrated 2D RGB spatial variations, our models confidently handle high false-positive hazards traditionally caused by arbitrary natural fruit shapes scaling correctly for commercial high-throughput inspection tasks.
 
 ---
 
