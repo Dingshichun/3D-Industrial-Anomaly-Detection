@@ -14,9 +14,9 @@ class DatasetConfig:
     num_workers: int = 4
     
     def __post_init__(self):
-        # 默认使用所有 5 个类别进行评估
+        # 默认使用所有 8 个类别进行评估
         if self.categories is None:
-            self.categories = ['dowel', 'cable_gland', 'tire', 'rope', 'foam']
+            self.categories = ['dowel', 'cable_gland', 'tire', 'rope', 'foam', 'carrot', 'potato', 'peach']
 
 @dataclass
 class ModelConfig:
