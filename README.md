@@ -15,6 +15,23 @@
 3. **Category Router 智能路由系统**
    * 系统为不同类别定制了专用检测核和超参数（高斯平滑 `blur_radius`、池化 `top_k`、特征库下采样率 `subsample`、空间权重 `xyz_weight`），全自动匹配最优检测链路。
 
+## 📸 可视化结果展示 (Visualization)
+系统自带特征热图自动生成功能。在模型推理完毕后，热力值可以直接反映出表面异常在三维与二维空间上的精确定位。
+
+**下方展示了 `dowel`, `rope`, `tire`, `carrot`, `peach`, `potato` 的检测结果示例：**
+
+工业产品
+![Dowel Contamination 示例](visualizations/dowel/dowel_contamination_4.png)
+![rope Contamination 示例](visualizations/rope/rope_contamination_3.png)
+![tire Contamination 示例](visualizations/tire/tire_contamination_2.png) 
+ 
+农业产品
+![carrot Contamination 示例](visualizations/carrot/carrot_contamination_4.png)
+![peach Contamination 示例](visualizations/peach/peach_contamination_3.png)
+![potato Contamination 示例](visualizations/potato/potato_contamination_2.png)
+*(注：图示自左向右依次为 RGB原图、Z轴原始点云深度图、检测出的异常热力图、真实的缺陷标注 Ground Truth)*
+
+
 ## 📊 评估结果指标 (Performance Metrics)
 在最新的评估测试中，各类别的检测表现如下：
 
@@ -28,22 +45,6 @@
 | `carrot` (农产品) | Spatial PatchCore (`xyz_weight=0.0, blur_radius=4, subsample=0.1`) | **0.9122** | **0.9938** |
 | `potato` (农产品) | Spatial PatchCore (`xyz_weight=0.0, blur_radius=4, subsample=0.1`) | **0.8557** | **0.9961** |
 | `peach` (农产品) | Spatial PatchCore (`xyz_weight=0.0, blur_radius=4, subsample=0.1`) | **0.8414** | **0.9936** |
-
-## 📸 可视化结果展示 (Visualization)
-系统自带特征热图自动生成功能。在模型推理完毕后，热力值可以直接反映出表面异常在三维与二维空间上的精确定位。
-
-**下方展示了 `dowel`, `rope`, `tire`, `carrot`, `peach`, `potato` 的表面污染（Contamination）情况下的检测结果示例：**
-
-工业产品
-![Dowel Contamination 示例](visualizations/dowel/dowel_contamination_4.png)
-![rope Contamination 示例](visualizations/rope/rope_contamination_3.png)
-![tire Contamination 示例](visualizations/tire/tire_contamination_2.png) 
- 
-农业产品
-![carrot Contamination 示例](visualizations/carrot/carrot_contamination_4.png)
-![peach Contamination 示例](visualizations/peach/peach_contamination_3.png)
-![potato Contamination 示例](visualizations/potato/potato_contamination_2.png)
-*(注：图示自左向右依次为 RGB原图、Z轴原始点云深度图、检测出的异常热力图、真实的缺陷标注 Ground Truth)*
 
 ## 🛠️ 安装与环境 (Installation)
 确保安装了可用的 CUDA 环境及匹配的 PyTorch。
@@ -113,18 +114,6 @@ python main.py --categories cable_gland dowel foam tire rope --visualize
 ### MVTec 3D-AD 官方数据集页面
 请访问以下链接下载完整的数据集：
 [https://www.mvtec.com/company/research/datasets/mvtec-3d-ad](https://www.mvtec.com/company/research/datasets/mvtec-3d-ad)
-
-### 学术引用 (Citation)
-如果您在研究中使用了 MVTec 3D-AD 或受到了本项目的启发，请遵循学术规范引用 MVTec 官方文献：
-```bibtex
-@inproceedings{mvtec3dad,
-  title={The MVTec 3D-AD Dataset for Unsupervised 3D Anomaly Detection and Localization},
-  author={Bergmann, Paul and Jin, Xin and Abati, Davide and Grigg, Andreas and Leonhardt, Jan-Hendrik and Schmidt, Maximilian and Zeller, Michael and Hashash, Fadi and Steger, Carsten},
-  booktitle={Proceedings of the 17th International Joint Conference on Computer Vision, Imaging and Computer Graphics Theory and Applications - Volume 4: VISAPP},
-  pages={202--213},
-  year={2022}
-}
-```
 
 ## 📄 许可证协议 (License)
 本项目基于 [MIT License](LICENSE) 协议开源。欢迎在此基础上进行自由探索、研究及商业用途，但保留原始来源声明。
