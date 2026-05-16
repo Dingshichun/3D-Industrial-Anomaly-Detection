@@ -21,14 +21,14 @@
 **下方展示了 `dowel`, `rope`, `tire`, `carrot`, `peach`, `potato` 的检测结果示例：**
 
 工业产品
-![Dowel Contamination 示例](visualizations/dowel/dowel_contamination_4.png)
-![rope Contamination 示例](visualizations/rope/rope_contamination_3.png)
-![tire Contamination 示例](visualizations/tire/tire_contamination_2.png) 
+![Dowel 示例](visualizations/dowel/dowel_contamination_4.png)
+![rope 示例](visualizations/rope/rope_contamination_3.png)
+![tire 示例](visualizations/tire/tire_contamination_2.png) 
  
 农业产品
-![carrot Contamination 示例](visualizations/carrot/carrot_contamination_4.png)
-![peach Contamination 示例](visualizations/peach/peach_contamination_3.png)
-![potato Contamination 示例](visualizations/potato/potato_contamination_2.png)
+![carrot 示例](visualizations/carrot/carrot_contamination_4.png)
+![peach 示例](visualizations/peach/peach_contamination_3.png)
+![potato 示例](visualizations/potato/potato_contamination_2.png)
 *(注：图示自左向右依次为 RGB原图、Z轴原始点云深度图、检测出的异常热力图、真实的缺陷标注 Ground Truth)*
 
 
