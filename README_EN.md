@@ -16,6 +16,21 @@ This project integrates two powerful anomaly detection algorithms customized wit
 3. **Smart Category Router System**
    * Fully automated hyperparameter selection (`blur_radius, top_k, subsample, xyz_weight`) explicitly optimized for specific materials.
 
+## 📸 Visualization Example
+The system enables automatic diagnostic visualizations by masking irrelevant background point clouds (`depth=0`) and rendering continuous defect heatmaps layered smoothly onto RGB input limits.
+
+**Below are detection examples for `dowel`, `rope`, `tire`, `carrot`, `peach`, and `potato`:**
+
+Industrial Products
+![Dowel](visualizations/dowel/dowel_contamination_4.png)
+![Rope](visualizations/rope/rope_contamination_3.png)
+![Tire](visualizations/tire/tire_contamination_2.png)  
+Agricultural Products
+![Carrot](visualizations/carrot/carrot_contamination_4.png)
+![Peach](visualizations/peach/peach_contamination_3.png)
+![Potato](visualizations/potato/potato_contamination_2.png)
+*(Inputs mapping -> left to right: RGB | Z-Depth | Predicted Distances Heatmap | Ground Truth Mask)*
+
 ## 📊 Performance Metrics
 Under typical evaluation metrics, the system resolves across multiple objects:
 
@@ -29,21 +44,6 @@ Under typical evaluation metrics, the system resolves across multiple objects:
 | `carrot` (Agriculture) | Spatial PatchCore (`xyz_weight=0.0, blur_radius=4, subsample=0.1`) | **0.9122** | **0.9938** |
 | `potato` (Agriculture) | Spatial PatchCore (`xyz_weight=0.0, blur_radius=4, subsample=0.1`) | **0.8557** | **0.9961** |
 | `peach` (Agriculture) | Spatial PatchCore (`xyz_weight=0.0, blur_radius=4, subsample=0.1`) | **0.8414** | **0.9936** |
-
-## 📸 Visualization Example
-The system enables automatic diagnostic visualizations by masking irrelevant background point clouds (`depth=0`) and rendering continuous defect heatmaps layered smoothly onto RGB input limits.
-
-**Below are detection examples of surface contamination for `dowel`, `rope`, `tire`, `carrot`, `peach`, and `potato`:**
-
-Industrial Products
-![Dowel Contamination](visualizations/dowel/dowel_contamination_4.png)
-![Rope Contamination](visualizations/rope/rope_contamination_3.png)
-![Tire Contamination](visualizations/tire/tire_contamination_2.png)  
-Agricultural Products
-![Carrot Contamination](visualizations/carrot/carrot_contamination_4.png)
-![Peach Contamination](visualizations/peach/peach_contamination_3.png)
-![Potato Contamination](visualizations/potato/potato_contamination_2.png)
-*(Inputs mapping -> left to right: RGB | Z-Depth | Predicted Distances Heatmap | Ground Truth Mask)*
 
 ## 🛠️ Installation
 A capable CUDA environment and compatible PyTorch layout are needed.
@@ -75,19 +75,9 @@ python main.py --categories cable_gland dowel foam tire rope --visualize
 * `--save_model`: Saves feature banks and model checkpoints inside `checkpoints/`.
 * `--load_model`: Skips memory bank building/training and evaluates existing weights straight from `checkpoints/`.
 
-## 📄 Dataset & Citation
+## 📄 Dataset
 Real industrial settings rely heavily on uncontrolled unlabelled data, normally only featuring `good` quality pieces mapping.
 You can acquire the dataset manually here: [Dataset Download Portal](https://www.mvtec.com/company/research/datasets/mvtec-3d-ad).
-If the approach or the MVTec 3D-AD format serves your research intent, kindly quote the original authors as below:
-```bibtex
-@inproceedings{mvtec3dad,
-  title={The MVTec 3D-AD Dataset for Unsupervised 3D Anomaly Detection and Localization},
-  author={Bergmann, Paul and Jin, Xin and Abati, Davide and Grigg, Andreas and Leonhardt, Jan-Hendrik and Schmidt, Maximilian and Zeller, Michael and Hashash, Fadi and Steger, Carsten},
-  booktitle={Proceedings of the 17th International Joint Conference on Computer Vision, Imaging and Computer Graphics Theory and Applications - Volume 4: VISAPP},
-  pages={202--213},
-  year={2022}
-}
-```
 
 ## ⚖️ License
 This project operates under the standard [MIT License](LICENSE). Open for research analysis and independent forks!
