@@ -33,7 +33,8 @@
 
 
 ## 📊 评估结果指标 (Performance Metrics)
-在最新的评估测试中，各类别的检测表现如下：
+在最新的评估测试中，各类别的检测表现如下：  
+__AUROC__ 是 __Area Under the Receiver Operating Characteristic Curve（接收者操作特征曲线下面积）__，是异常检测领域最核心的评估指标之一。
 
 | 类别 (Category) | 测算策略与关键参数配置 | 样本级 AUROC (Sample) | 像素级 AUROC (Point) |
 | :--- | :--- | :--- | :--- |
