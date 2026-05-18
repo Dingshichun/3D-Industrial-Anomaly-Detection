@@ -130,6 +130,7 @@ class ASTEvaluator(BaseEvaluator):
         return dist_map
 
     def compute_dist_maps(self, teachers, students):
+        # 计算教师和学生特征之间的余弦距离，并将多个层级的距离图进行平均融合，得到最终的异常热力图。
         dist_maps = []
         for t, s in zip(teachers, students):
             t_norm = F.normalize(t, p=2, dim=1)
@@ -295,12 +296,12 @@ class SpatialPatchCoreEvaluator(BaseEvaluator):
         self.model = models.resnet18(pretrained=True).to(self.device).eval()
         self.features = []
         self.xyz_weight = xyz_weight
-        self.subsample_ratio = subsample_ratio
-        self.blur_radius = blur_radius
-        self.top_k = top_k
+        self.subsample_ratio = subsample_ratio # 用于构建特征银行时的随机子采样比例，适当增加可以提升训练速度和减少内存占用，但过大会损失精度
+        self.blur_radius = blur_radius # 用于平滑距离图的高斯模糊半径，适当增加可以提升对高频纹理缺陷（如泡沫、轮胎）的检测稳定性
+        self.top_k = top_k # 用于计算样本级异常分数时的 top-k 平均，适当增加可以提升对大面积缺陷的检测能力，但过大会降低对小型缺陷的敏感度
         
         def h(m, i, o): self.features.append(o)
-        self.model.layer2.register_forward_hook(h)
+        self.model.layer2.register_forward_hook(h) # 在 ResNet18 的 layer2 和 layer3 层注册前向钩子，以提取中层特征图
         self.model.layer3.register_forward_hook(h)
 
     def compute_normals(self, xyz):
@@ -310,9 +311,11 @@ class SpatialPatchCoreEvaluator(BaseEvaluator):
         能够凸显出表面纹理中高频的凹凸不平或边缘毛刺缺陷。
         """
         B, C, H, W = xyz.shape
+        # 这里的 Sobel 核是针对深度图（Z 维）进行设计的，计算在 U 和 V 方向上的梯度，然后通过叉积得到法向量。
         kernel_u = torch.tensor([[-1., 0., 1.], [-2., 0., 2.], [-1., 0., 1.]]).view(1, 1, 3, 3).to(xyz.device)
         kernel_v = torch.tensor([[-1., -2., -1.], [0., 0., 0.], [1., 2., 1.]]).view(1, 1, 3, 3).to(xyz.device)
         
+        # 将 XYZ 的三个通道视为一个整体进行卷积，以保持通道之间的空间一致性
         xyz_unfold = xyz.view(B*3, 1, H, W)
         grad_u = F.conv2d(xyz_unfold, kernel_u, padding=1).view(B, 3, H, W)
         grad_v = F.conv2d(xyz_unfold, kernel_v, padding=1).view(B, 3, H, W)
@@ -320,6 +323,7 @@ class SpatialPatchCoreEvaluator(BaseEvaluator):
         normals = torch.cross(grad_u, grad_v, dim=1)
         normals = F.normalize(normals, p=2, dim=1)
         
+        # 仅在有效的深度区域保留法向量，其他区域置零，以避免无效点对特征提取和距离计算的干扰
         mask = (xyz[:, 2:3, :, :] != 0).float()
         normals = normals * mask
         return normals
@@ -352,6 +356,9 @@ class SpatialPatchCoreEvaluator(BaseEvaluator):
         print(f"SpatialPatchCore memory bank loaded from {path} with size {self.memory_bank.shape}")
 
     def build_feature_bank(self, train_loader):
+        '''根据训练数据构建 PatchCore 的特征银行。
+        通过 ResNet 提取局部 2D 特征图，并融合 3D 空间特征（XYZ 坐标以及表面法向量），
+        将其平铺构建 KNN (K-Nearest Neighbors) 或 CDist 特征内存提取库。'''
         print(f"Building Spatial PatchCore Bank... (xyz_weight={self.xyz_weight}, subsample={self.subsample_ratio})")
         lst = []
         import tqdm
