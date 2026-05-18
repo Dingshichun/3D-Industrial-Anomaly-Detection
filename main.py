@@ -5,7 +5,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 from config import DatasetConfig, ModelConfig
-from dataset import create_dataloaders
+from dataset import create_dataloaders 
 from train_eval import get_evaluator
 
 def parse_args():
@@ -14,7 +14,7 @@ def parse_args():
     parser.add_argument('--raw_data_root', type=str, default='./data/MVTec3D-AD')
     parser.add_argument('--categories', nargs='+', default=['dowel'])
     parser.add_argument('--batch_size', type=int, default=4)
-    parser.add_argument('--f_coreset', type=float, default=0.01)
+    parser.add_argument('--f_coreset', type=float, default=0.01) # f_coreset 是 PatchCore 中用于构建特征银行的核心集大小比例
     parser.add_argument('--visualize', action='store_true', help='Save visualization images')
     parser.add_argument('--save_model', action='store_true', help='Save the trained feature bank/model')
     parser.add_argument('--load_model', action='store_true', help='Load the feature bank/model instead of training')
